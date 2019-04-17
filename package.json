@@ -1,8 +1,8 @@
 {
-  "name": "",
+  "name": "pcm-visual",
   "version": "0.1.0",
   "description": "",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server --config webpack.config.js"

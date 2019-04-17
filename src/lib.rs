@@ -14,6 +14,6 @@ extern {
 }
 
 #[wasm_bindgen]
-pub fn run() {
-    alert("Hello, pcm-visual!");
+pub fn run(s: &str) {
+    alert(s);
 }

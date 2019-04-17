@@ -3,9 +3,10 @@ const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./index.ts",
+  entry: "./src/bootstrap.ts",
   output: {
     path: path.resolve(__dirname, "dist"),
+    publicPath: "/",
     filename: "bundle.js"
   },
   plugins: [
