@@ -1,4 +1,8 @@
-# `create-wasm-app`
+# Experimental Work in Progress
+
+Using Rust with Typescript to produce Web Assembly.
+
+## `create-wasm-app`
 
 > An `npm init` template for kick starting a project that uses NPM packages
 > containing Rust-generated WebAssembly and bundles them with Webpack.
