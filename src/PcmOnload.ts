@@ -27,6 +27,7 @@
 */
 
 export class PcmOnload extends HTMLElement {
+  wasm: any;
   shadow: ShadowRoot;
   width: number;
   height: number;
@@ -149,6 +150,7 @@ export class PcmOnload extends HTMLElement {
     style.textContent = ':host { display:block }';
     this.shadow.appendChild(style);
     this.canvas = document.createElement('canvas');
+    this.canvas.setAttribute('id', (new Date().getUTCMilliseconds() + Math.random()).toString());
     this.canvas.width = this.width;
     this.canvas.height = this.height;
     this.shadow.appendChild(this.canvas);
@@ -158,7 +160,7 @@ export class PcmOnload extends HTMLElement {
 
     import("../pkg/pcm_visual").then(module => {
       console.log('Enter bootstrap.ts imported pkg/pcm_visual');
-      module.run('Oh dear');
+      this.wasm = module;
       this.load();
     }).catch(e => console.error("Error importing `index`:", e));
 
@@ -241,6 +243,13 @@ export class PcmOnload extends HTMLElement {
     */
   render() {
     const channelData = [];
+    this.wasm.run(
+      this.canvas.id,
+      this.buffer,
+      this.strokestyle,
+      this.linewidth,
+      this.step
+    );
     this.cctx.beginPath();
     this.cctx.strokeStyle = this.strokestyle;
     this.cctx.lineWidth = this.linewidth;
@@ -261,7 +270,6 @@ export class PcmOnload extends HTMLElement {
 
       const x = i * xFactor;
       let y = (v / this.buffer.numberOfChannels);
-      // console.assert( y < 1 );
       y = (this.height * y / 2) + (this.height / 2);
 
       this.cctx.lineTo(

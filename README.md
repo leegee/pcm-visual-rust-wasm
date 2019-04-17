@@ -4,6 +4,12 @@ Using Rust with Typescript to produce Web Components that use Web Assembly and H
 
 Target was es5, now back es2015 to avoid wp messing up wc
 
+https://bugs.chromium.org/p/chromium/issues/detail?id=921473
+https://bugs.chromium.org/p/chromium/issues/detail?id=877055
+https://bugs.chromium.org/p/chromium/issues/detail?id=935169
+
+SharedArrayBuffer objects fail to get garbage collected, causing memory leaks.
+
 ## `create-wasm-app`
 
 > An `npm init` template for kick starting a project that uses NPM packages
