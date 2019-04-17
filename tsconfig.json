@@ -10,7 +10,7 @@
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "es5"
+    "target": "es2015"
   },
   "exclude": ["spec\\.ts$"]
 }

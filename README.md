@@ -2,6 +2,8 @@
 
 Using Rust with Typescript to produce Web Components that use Web Assembly and HTML5 Audio.
 
+Target was es5, now back es2015 to avoid wp messing up wc
+
 ## `create-wasm-app`
 
 > An `npm init` template for kick starting a project that uses NPM packages

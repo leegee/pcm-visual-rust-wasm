@@ -29,7 +29,13 @@ export class PcmRealTime extends HTMLElement {
     document.getElementsByTagName('body')[0].clientHeight;
   uri: string = null;
 
+  constructor(){
+    super();
+    console.log('Enter new PcmRealtime');
+  }
+
   connectedCallback() {
+    console.log('Enter new PcmRealtime.connectedCallback');
     ATTR_NAMES.forEach(attr => {
       let v = this.getAttribute(attr);
       if (v) {
@@ -145,3 +151,4 @@ export class PcmRealTime extends HTMLElement {
 }
 
 customElements.define('pcm-realtime', PcmRealTime);
+console.log("customElements.define('pcm-realtime', PcmRealTime)");

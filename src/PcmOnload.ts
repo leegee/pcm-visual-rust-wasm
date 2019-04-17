@@ -84,9 +84,8 @@ export class PcmOnload extends HTMLElement {
   };
   actxStartTime: number;
 
-  constructor() {
-    super();
-
+  connectedCallback() {
+    console.log("Enter PcmOnload.connectedCallback");
     this.step = Math.floor(this.step);
 
     if (typeof AudioContext !== 'function') {
@@ -101,9 +100,7 @@ export class PcmOnload extends HTMLElement {
     if (!this.frequencyby.match(/max/i)) {
       this.pauseorjump = 'average';
     }
-  }
 
-  connectedCallback() {
     this.shadow = this.attachShadow({ mode: 'open' });
     const styles = window.getComputedStyle(this);
 
@@ -158,7 +155,14 @@ export class PcmOnload extends HTMLElement {
     this.cctx = this.canvas.getContext('2d');
 
     this.setClrs();
-    this.load();
+
+    import("../pkg/pcm_visual").then(module => {
+      console.log('Enter bootstrap.ts imported pkg/pcm_visual');
+      module.run('Oh dear');
+      this.load();
+    }).catch(e => console.error("Error importing `index`:", e));
+
+    // this.load();
   }
 
   onSoundLoaded() {
@@ -173,7 +177,9 @@ export class PcmOnload extends HTMLElement {
     throw 'Error decoding file data from ' + this.getAttribute('uri');
   };
 
-  /* Fired when the waveform has been rendered. Default behaviour is to call `colourFrequencies()` to colour the waveform based on FFT frequency analysis. */
+  /* Fired when the waveform has been rendered. 
+    Default behaviour is to call `colourFrequencies()` to colour the waveform based on 
+    FFT frequency analysis. */
   onRendered() {
     this.colourFrequencies();
   };
@@ -212,8 +218,8 @@ export class PcmOnload extends HTMLElement {
       this.actx = new AudioContext();
       this.actx.decodeAudioData(request.response, (buffer) => {
         if (!buffer) {
-          console.error('Error decoding file data: ' + this.getAttribute('uri'));
-          throw new Error('File decoding error');
+          console.error('Error decoding date from file ' + this.getAttribute('uri'));
+          throw new Error('Error decoding file');
         } else {
           this.buffer = buffer;
           this.audioReady = true;
@@ -576,3 +582,4 @@ export class PcmOnload extends HTMLElement {
 }
 
 customElements.define('pcm-onload', PcmOnload);
+console.log("customElements.define('pcm-onload', PcmOnload)");
