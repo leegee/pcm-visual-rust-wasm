@@ -1,6 +1,6 @@
 # Experimental Work in Progress
 
-Using Rust with Typescript to produce Web Assembly.
+Using Rust with Typescript to produce Web Components that use Web Assembly and HTML5 Audio.
 
 ## `create-wasm-app`
 
