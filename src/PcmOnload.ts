@@ -159,7 +159,6 @@ export class PcmOnload extends HTMLElement {
     this.setClrs();
 
     import("../pkg/pcm_visual").then(module => {
-      console.log('Enter bootstrap.ts imported pkg/pcm_visual');
       this.wasm = module;
       this.load();
     }).catch(e => console.error("Error importing `index`:", e));
@@ -395,6 +394,7 @@ export class PcmOnload extends HTMLElement {
           this.overlay.thisX, 0, 1, this.height
         );
       } else {
+        console.info('************');
         // this.cctx.globalAlpha = 12;
         this.cctx.globalCompositeOperation = 'source-atop';
         this.cctx.fillStyle = this.overlay.fg.all;
