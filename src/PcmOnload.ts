@@ -250,38 +250,6 @@ export class PcmOnload extends HTMLElement {
       this.linewidth,
       this.step
     );
-
-    // this.cctx.beginPath();
-    // this.cctx.strokeStyle = this.strokestyle;
-    // this.cctx.lineWidth = this.linewidth;
-
-    // this.cctx.moveTo(0, this.height / 2);
-
-    // for (let channel = 0; channel < this.buffer.numberOfChannels; channel++) {
-    //   channelData[channel] = this.buffer.getChannelData(channel);
-    // }
-
-    // const xFactor = this.width / channelData[0].length;
-
-    // for (let i = 0; i < channelData[0].length; i += this.step) {
-    //   let v = 0;
-    //   for (let c = 0; c < this.buffer.numberOfChannels; c++) {
-    //     v += channelData[c][i];
-    //   }
-
-    //   const x = i * xFactor;
-    //   let y = (v / this.buffer.numberOfChannels);
-    //   y = (this.height * y / 2) + (this.height / 2);
-
-    //   this.cctx.lineTo(
-    //     Math.floor(x),
-    //     Math.floor(y)
-    //   );
-    // }
-
-    // this.cctx.stroke();
-
-    console.log('After rust');
     this.fireEvent('rendered');
   };
 
@@ -423,26 +391,10 @@ export class PcmOnload extends HTMLElement {
 
         this.cctx.globalCompositeOperation = 'source-atop';
         this.cctx.fillStyle = this.overlay.fg.all;
-        console.log('thisX', this.overlay.thisX);
         this.cctx.fillRect(
           this.overlay.thisX, 0, 1, this.height
         );
       } else {
-        /*
-                const imgd = this.cctx.getImageData(
-                    this.overlay.lastX, 0,
-                    (this.overlay.thisX - this.overlay.lastX), this.height
-                );
-
-                for (let i=0; i <= imgd.data.length; i+=4){
-                    imgd.data[i]    = this.overlay.fg.r;
-                    imgd.data[i+1]  = this.overlay.fg.g;
-                    imgd.data[i+2]  = this.overlay.fg.b;
-                    // imgd.data[i+3]  = 255; // imgd.data[i+3];
-                }
-                this.cctx.putImageData(imgd, this.overlay.lastX, 0);
-                */
-
         // this.cctx.globalAlpha = 12;
         this.cctx.globalCompositeOperation = 'source-atop';
         this.cctx.fillStyle = this.overlay.fg.all;
@@ -463,10 +415,8 @@ export class PcmOnload extends HTMLElement {
     Used here to apply frequency analysis to colour the wave.
     Sets a few parameters for use during playback.
     */
-  _offlineOverlayImg(e) {
-    if (this.overlay.pxPerSec === null) {
-      this.overlay.pxPerSec = this.width / this.buffer.duration;
-    }
+  _offlineOverlayImg(e: AudioProcessingEvent) {
+    this.overlay.pxPerSec = this.width / this.buffer.duration;
 
     let fromX = Math.floor(e.playbackTime * this.overlay.pxPerSec);
     const toX = Math.ceil(fromX + (e.inputBuffer.duration * this.overlay.pxPerSec));
