@@ -25,6 +25,7 @@ version = "0.3.4"
 features = [
   'AudioBuffer',
   'CanvasRenderingContext2d',
+  'console', 
   'Document',
   'Element',
   'HtmlCanvasElement',
@@ -33,3 +34,4 @@ features = [
 
 [profile.release]
 opt-level = "s"
+debug = true
