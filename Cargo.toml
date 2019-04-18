@@ -26,10 +26,8 @@ features = [
   'AudioBuffer',
   'CanvasRenderingContext2d',
   'console', 
-  'Document',
   'Element',
-  'HtmlCanvasElement',
-  'Window',
+  'HtmlCanvasElement'
 ]
 
 [profile.release]
