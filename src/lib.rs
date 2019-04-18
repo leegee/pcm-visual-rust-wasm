@@ -34,13 +34,17 @@ pub fn render(
         .map_err(|_| ())
         .unwrap();
 
-    let mut channel_data: [Vec<f32>; 2] = unsafe { std::mem::uninitialized() }; // Vec<Vec<f32>> = [].to_vec();
+    let channel_data: [Vec<f32>; 2] = [
+        audio_buffer .get_channel_data(0) .unwrap(),
+        audio_buffer .get_channel_data(1) .unwrap()
+    ];
 
-    for channel_number in 0..1 {
-        channel_data[channel_number] = audio_buffer
-            .get_channel_data(channel_number as u32)
-            .unwrap();
-    }
+    // let mut channel_data: [Vec<f32>; 2] = Default::default();
+    // for channel_number in 0..=1 {
+    //     channel_data[channel_number] = audio_buffer
+    //         .get_channel_data(channel_number as u32)
+    //         .unwrap();
+    // }
 
     let x_factor: f64 = canvas.width() as f64 / channel_data[0].len() as f64;
 

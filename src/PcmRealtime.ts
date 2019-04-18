@@ -150,5 +150,5 @@ export class PcmRealTime extends HTMLElement {
   }
 }
 
-customElements.define('pcm-realtime', PcmRealTime);
+window.customElements.define('pcm-realtime', PcmRealTime);
 console.log("customElements.define('pcm-realtime', PcmRealTime)");

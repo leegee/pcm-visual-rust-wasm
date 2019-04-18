@@ -416,7 +416,9 @@ export class PcmOnload extends HTMLElement {
     Sets a few parameters for use during playback.
     */
   _offlineOverlayImg(e: AudioProcessingEvent) {
-    this.overlay.pxPerSec = this.width / this.buffer.duration;
+    if (this.overlay.pxPerSec === null) { // first call
+      this.overlay.pxPerSec = this.width / this.buffer.duration;
+    }
 
     let fromX = Math.floor(e.playbackTime * this.overlay.pxPerSec);
     const toX = Math.ceil(fromX + (e.inputBuffer.duration * this.overlay.pxPerSec));
@@ -541,5 +543,5 @@ export class PcmOnload extends HTMLElement {
   };
 }
 
-customElements.define('pcm-onload', PcmOnload);
+window.customElements.define('pcm-onload', PcmOnload);
 console.log("customElements.define('pcm-onload', PcmOnload)");
