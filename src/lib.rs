@@ -90,3 +90,9 @@ pub fn render(
     ctx.stroke();
     web_sys::console::log_1(&"rust done".into());
 }
+
+
+// #[wasm_bindgen]
+// pub fn offlineOverlayImg() {
+
+// }
