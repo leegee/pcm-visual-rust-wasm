@@ -1,7 +1,7 @@
 /*
-  Version 0.5
+  Version 0.6
 
-  This code is copyright (C) 2012 Lee Goddard.
+  This code is copyright (C) 2012 ff Lee Goddard.
   All Rights Reserved.
 
   Available under the same terms as Perl5.
@@ -58,7 +58,7 @@ export class PcmOnload extends HTMLElement {
   img: HTMLImageElement;
   audioReady = false;
   playing = false;
-  renderTimer: number;
+  renderTimer: null | ReturnType<typeof setTimeout> = null;
   pauseTimer: number;
   playbackTime = 0; /* Current time ini sound; for pausing */
   overlay = { /* Private overlay details. */
@@ -161,7 +161,9 @@ export class PcmOnload extends HTMLElement {
     import("../pkg/pcm_visual").then(module => {
       this.wasm = module;
       this.load();
-    }).catch(e => console.error("Error importing `index`:", e));
+    })
+      .then(_ => console.log('Loaded'))
+      .catch(e => console.error("Error importing `index`:", e));
 
     // this.load();
   }
@@ -178,11 +180,14 @@ export class PcmOnload extends HTMLElement {
     throw 'Error decoding file data from ' + this.getAttribute('uri');
   };
 
-  /* Fired when the waveform has been rendered. 
-    Default behaviour is to call `colourFrequencies()` to colour the waveform based on 
+  /* Fired when the waveform has been rendered.
+    Default behaviour is to call `colourFrequencies()` to colour the waveform based on
     FFT frequency analysis. */
   onRendered() {
-    this.colourFrequencies();
+    this.colourFrequencies().then(() => {
+      this.graphComplete();
+    });
+    console.log('onRendered');
   };
 
   onPlay() {
@@ -287,8 +292,12 @@ export class PcmOnload extends HTMLElement {
     }
     this.playbackTime = pause ? this.now() : 0;
     this.node.stop();
-    clearInterval(this.renderTimer);
-    clearTimeout(this.pauseTimer);
+    if (this.renderTimer) {
+      clearInterval(this.renderTimer);
+    }
+    if (this.pauseTimer) {
+      clearTimeout(this.pauseTimer);
+    }
     this.playing = false;
     if (!pause) {
       this.playbackTime = 0;
@@ -394,7 +403,6 @@ export class PcmOnload extends HTMLElement {
           this.overlay.thisX, 0, 1, this.height
         );
       } else {
-        console.info('************');
         // this.cctx.globalAlpha = 12;
         this.cctx.globalCompositeOperation = 'source-atop';
         this.cctx.fillStyle = this.overlay.fg.all;
@@ -451,31 +459,33 @@ export class PcmOnload extends HTMLElement {
 
   colourFrequencies() {
     console.log('Enter colourFrequencies');
-    if (this.buffer === null) {
-      throw new Error('No buffer: setNode not called?');
-    }
+    return new Promise((resolve, reject) => {
+      if (this.buffer === null) {
+        throw new Error('No buffer: setNode not called?');
+      }
 
-    this.octx = new OfflineAudioContext(this.buffer.numberOfChannels, this.buffer.length, this.buffer.sampleRate);
+      this.octx = new OfflineAudioContext(this.buffer.numberOfChannels, this.buffer.length, this.buffer.sampleRate);
 
-    this.offlineNode = this.octx.createBufferSource();
+      this.offlineNode = this.octx.createBufferSource();
 
-    this.offlineAnalyser = this.octx.createAnalyser();
-    this.offlineAnalyser.fftSize = this.fftsize;
-    this.offlineAnalyser.smoothingTimeConstant = this.smoothingtimeconstant;
+      this.offlineAnalyser = this.octx.createAnalyser();
+      this.offlineAnalyser.fftSize = this.fftsize;
+      this.offlineAnalyser.smoothingTimeConstant = this.smoothingtimeconstant;
 
-    this.offlineProcessor = this.octx.createScriptProcessor(this.fftsize, this.buffer.numberOfChannels, this.buffer.numberOfChannels);
+      this.offlineProcessor = this.octx.createScriptProcessor(this.fftsize, this.buffer.numberOfChannels, this.buffer.numberOfChannels);
 
-    this.offlineProcessor.connect(this.octx.destination);
-    this.offlineAnalyser.connect(this.offlineProcessor);
-    this.offlineNode.connect(this.offlineAnalyser);
+      this.offlineProcessor.connect(this.octx.destination);
+      this.offlineAnalyser.connect(this.offlineProcessor);
+      this.offlineNode.connect(this.offlineAnalyser);
 
-    this.octx.oncomplete = this.graphComplete.bind(this);
+      this.octx.oncomplete = resolve;
 
-    this.offlineProcessor.onaudioprocess = this._offlineOverlayImg.bind(this);
+      this.offlineProcessor.onaudioprocess = this._offlineOverlayImg.bind(this);
 
-    this.offlineNode.buffer = this.buffer;
-    this.offlineNode.start();
-    this.octx.startRendering();
+      this.offlineNode.buffer = this.buffer;
+      this.offlineNode.start();
+      this.octx.startRendering();
+    });
   };
 
   setNode() {
@@ -526,6 +536,9 @@ export class PcmOnload extends HTMLElement {
       this.canvas.addEventListener('click', (e) => {
         this.clickedGraphic(e)
       });
+      console.log('added click')
+    } else {
+      console.log('not playable');
     }
 
     this.fireEvent('complete');

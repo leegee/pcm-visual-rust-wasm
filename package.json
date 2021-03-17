@@ -4,11 +4,11 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-     "build": "npm run wasm:build &&  npm run webpack:build",
-    "start": "npm run wasm:build &&  npm run webpack:start",
+    "build": "npm run wasm:build && npm run webpack:build",
+    "start": "npm run wasm:build && npm run webpack:start",
     "wasm:build": "wasm-pack build",
     "webpack:build": "webpack --config webpack.config.js",
-    "webpack:start": "webpack-dev-server --config webpack.config.js",
+    "webpack:start": "webpack-dev-server --config webpack.config.js --open eg/index.html",
     "wasm:test": "cargo test --target wasm32-unknown-unknown"
   },
   "repository": {
@@ -19,22 +19,25 @@
     "webassembly",
     "wasm",
     "rust",
-    "webpack"
+    "webpack",
+    "pcm",
+    "audio",
+    "wave",
+    "visualise"
   ],
   "author": "",
   "license": "UNLICENCED",
   "devDependencies": {
     "copy-webpack-plugin": "^5.0.0",
-    "hello-wasm-pack": "^0.1.0",
     "ts-loader": "^4.5.0",
     "ts-node": "^8.0.3",
     "typescript": "^3.4.1",
     "webpack": "^4.29.3",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "webpack-dev-server": "^3.11.2",
+    "html-webpack-plugin": "^3.2.0"
   },
   "dependencies": {
-    "@wasm-tool/wasm-pack-plugin": "^0.2.7",
-    "html-webpack-plugin": "^3.2.0"
+    "@wasm-tool/wasm-pack-plugin": "^0.2.7"
   }
 }
